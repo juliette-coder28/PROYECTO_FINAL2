@@ -8,10 +8,13 @@ lleva a una disminución de precios. Por otro lado, en épocas donde no se produ
 
 Plan de Solución del Problema
 
-Para resolver el problema planteado, seguimos un enfoque estructurado que incluye las siguientes etapas: '''\n'''
+Para resolver el problema planteado, seguimos un enfoque estructurado que incluye las siguientes etapas: 
 
--Recolección y Preparación de Datos '''\n'''
--Análisis Exploratorio de Datos (EDA) '''\n'''
--Modelado Predictivo'''\n'''
+-Recolección y Preparación de Datos 
+
+-Análisis Exploratorio de Datos (EDA)
+
+-Modelado Predictivo
+
 -Generación de Reportes y Visualizaciones Finales 
 '''
