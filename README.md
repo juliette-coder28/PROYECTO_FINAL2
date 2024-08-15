@@ -1,5 +1,6 @@
 # PROYECTO_FINAL2
-''' Análisis de la Variabilidad de Precios en Frutas y Vegetales: Comparación y Distribución de Costos
+
+Análisis de la Variabilidad de Precios en Frutas y Vegetales: Comparación y Distribución de Costos
 
 En nuestras comunidades, los precios de frutas y vegetales tienden a cambiar mucho dependiendo de la época del año, las condiciones climáticas y otros factores. 
 Todos hemos notado cómo en algunas temporadas, los precios de ciertos productos suben mientras que otros bajan, y esto puede ser confuso tanto para quienes venden 
@@ -17,4 +18,4 @@ Para resolver el problema planteado, seguimos un enfoque estructurado que incluy
 -Modelado Predictivo
 
 -Generación de Reportes y Visualizaciones Finales 
-'''
+
