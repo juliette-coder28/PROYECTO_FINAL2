@@ -1,70 +1,38 @@
-
 import pandas as pd
-
-file_path = '/content/Vegetable-fruits-Prices-2022.csv'
-
-data = pd.read_csv(file_path, encoding='latin-1')
-
-data.dropna(axis=1, how='all', inplace=True)
-
-data.drop_duplicates(inplace=True)
-
-data.fillna(method='ffill', inplace=True)
-
-cleaned_file_path = '/content/Vegetable-fruits-Prices-2022-cleaned.csv'
-data.to_csv(cleaned_file_path, index=False)
-
-print(f"Datos limpiados y guardados en '{cleaned_file_path}'")
-
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from etl import extraer_datos, transformar_datos  # Importando funciones desde el módulo de ETL
+from ml import split_data, entrenar_modelo, evaluar_modelo  # Importando funciones desde el módulo de ML
+from visualizacion import grafico_distribucion  # Importando funciones desde el módulo de visualización
 from sklearn.preprocessing import OneHotEncoder
 
-
+# ETL: Extraer y transformar datos
 file_path = '/content/Vegetable-fruits-Prices-2022.csv'
+data = extraer_datos(file_path)  # Usando función del módulo ETL
+data = transformar_datos(data)  # Transformación usando el módulo ETL
 
-data = pd.read_csv(file_path, encoding='latin-1')
-
-data.dropna(axis=1, how='all', inplace=True)
-data.drop_duplicates(inplace=True)
-data.fillna(method='ffill', inplace=True)
-
-encoder = OneHotEncoder(handle_unknown='ignore')
-encoded_form = encoder.fit_transform(data[['Form']])
-encoded_form_df = pd.DataFrame.sparse.from_spmatrix(encoded_form, columns=encoder.get_feature_names_out(['Form']))
-data = pd.concat([data, encoded_form_df], axis=1)
-data = data.drop('Form', axis=1)
-
+# One-Hot Encoding para las columnas categóricas
 categorical_cols = data.select_dtypes(include=['object']).columns
 for col in categorical_cols:
-
-    encoder = OneHotEncoder(handle_unknown='ignore')
+    encoder = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
     encoded_data = encoder.fit_transform(data[[col]])
-    encoded_df = pd.DataFrame.sparse.from_spmatrix(encoded_data, columns=encoder.get_feature_names_out([col]))
+    encoded_df = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out([col]))
     data = pd.concat([data, encoded_df], axis=1)
     data = data.drop(col, axis=1)
 
-
-print(data.columns)
-
-data['RetailPrice'] = data[['RetailPrice']].mean(axis=1)
-
-
+# Guardar datos limpiados
 cleaned_file_path = '/content/Vegetable-fruits-Prices-2022-cleaned.csv'
 data.to_csv(cleaned_file_path, index=False)
-
-features = data.drop('RetailPrice', axis=1)
-target = data['RetailPrice']
-
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-
-predictions = model.predict(X_test)
-mse = mean_squared_error(y_test, predictions)
-
-print(f"Mean Squared Error: {mse}")
 print(f"Datos limpiados y guardados en '{cleaned_file_path}'")
+
+# Visualización opcional
+grafico_distribucion(data, 'RetailPrice', 'Distribución de Precios de Vegetales')
+
+# Preparar datos para machine learning
+target_column = 'RetailPrice'
+X_train, X_test, y_train, y_test = split_data(data, target_column)
+
+# Entrenar el modelo
+modelo = entrenar_modelo(X_train, y_train)
+
+# Evaluar el modelo
+mse = evaluar_modelo(modelo, X_test, y_test)
+print(f"Error cuadrático medio: {mse}")
